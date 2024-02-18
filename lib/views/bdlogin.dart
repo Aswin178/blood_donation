@@ -1,17 +1,19 @@
+import 'package:blood_donation/controller/auth_controller.dart';
 import 'package:blood_donation/utility/const.dart';
 import 'package:blood_donation/utility/imagepath.dart';
+import 'package:blood_donation/views/bd_regis.dart';
 import 'package:blood_donation/views/bdhome.dart';
-import 'package:blood_donation/views/bdregis.dart';
 import 'package:blood_donation/widget/button.dart';
 import 'package:blood_donation/widget/txtfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class BdLogin extends StatelessWidget {
+  final authcontroller = Get.put(AuthController());
   final formkey = GlobalKey<FormState>();
-  final email_cntrl = TextEditingController();
-  final pass_cntrl = TextEditingController();
+
   BdLogin({super.key});
 
   @override
@@ -25,39 +27,60 @@ class BdLogin extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               SvgPicture.asset(
-               ImagePath.loginimg,
+                ImagePath.loginimg,
                 width: 200,
                 height: 400,
               ),
               txtfield(
-                  icondata: Icons.mail, cntrl: email_cntrl, hinttext: "Email",
-                 validator: (value) {
-                  if (value!.isEmpty || !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)) {
+                icondata: Icons.mail,
+                cntrl: authcontroller.loginemail_cntrl,
+                hinttext: "Email",
+                validator: (value) {
+                  if (value!.isEmpty ||
+                      !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                          .hasMatch(value)) {
                     return "Enter a valid email";
                   } else {
                     return null;
                   }
-                },),
-              txtfield(
-                icondata: Icons.lock,
-                cntrl: pass_cntrl,
-                hinttext: "Password",
-                obscure: true,
-                 validator: (value) {
-                  if (value!.isEmpty || value.length<6) {
-                    return "Password must be longer than 6 characters.";
-                  } else {
-                    return null;
-                  }
                 },
-              
-
+              ),
+              Obx(
+                () => txtfield(
+                  btn: IconButton(
+                      onPressed: () {
+                        authcontroller.hideText();
+                      },
+                      icon: Icon(
+                        authcontroller.obscure.value
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: txtfieldclr,
+                      )),
+                  icondata: Icons.lock,
+                  cntrl: authcontroller.loginpass_cntrl,
+                  hinttext: "Password",
+                  obscure: authcontroller.obscure.value,
+                  validator: (value) {
+                    if (value!.isEmpty || value.length < 6) {
+                      return "Password must be longer than 6 characters.";
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   children: [
-                    Checkbox(value: true, onChanged: ((value) {})),
+                    Obx(
+                      () => Checkbox(
+                          value: authcontroller.checBoxvalue.value,
+                          onChanged: ((value) {
+                            authcontroller.checkboxChange();
+                          })),
+                    ),
                     Text(
                       "Keep me logged in",
                       style: GoogleFonts.montserrat(
@@ -74,9 +97,8 @@ class BdLogin extends StatelessWidget {
                 function: () {
                   var valid = formkey.currentState!.validate();
                   if (valid) {
-
-                     Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => BdHome()));
+                  
+                    authcontroller.signIN();
                     
                   }
                 },

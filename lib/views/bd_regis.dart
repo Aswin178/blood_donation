@@ -1,3 +1,4 @@
+import 'package:blood_donation/controller/auth_controller.dart';
 import 'package:blood_donation/utility/const.dart';
 import 'package:blood_donation/utility/imagepath.dart';
 import 'package:blood_donation/views/bdlogin.dart';
@@ -5,13 +6,13 @@ import 'package:blood_donation/widget/button.dart';
 import 'package:blood_donation/widget/txtfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class BdRegi extends StatelessWidget {
+  final authcontroller = Get.put(AuthController());
   final formkey = GlobalKey<FormState>();
-  final name_cntrl = TextEditingController();
-  final email_cntrl = TextEditingController();
-  final pass_cntrl = TextEditingController();
+
   BdRegi({super.key});
 
   @override
@@ -32,7 +33,7 @@ class BdRegi extends StatelessWidget {
             ),
             txtfield(
               icondata: Icons.person,
-              cntrl: name_cntrl,
+              cntrl: authcontroller.name_cntrl,
               hinttext: "Name",
               validator: (value) {
                 if (value!.isEmpty) {
@@ -42,7 +43,7 @@ class BdRegi extends StatelessWidget {
             ),
             txtfield(
                 icondata: Icons.mail,
-                cntrl: email_cntrl,
+                cntrl: authcontroller.email_cntrl,
                 hinttext: "Email",
                 validator: (value) {
                   if (value!.isEmpty ||
@@ -53,23 +54,42 @@ class BdRegi extends StatelessWidget {
                     return null;
                   }
                 }),
-            txtfield(
+            Obx(
+              () => txtfield(
+                btn: IconButton(
+                    onPressed: () {
+                      authcontroller.hideText();
+                    },
+                    icon: Icon(
+                      authcontroller.obscure.value
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: txtfieldclr,
+                    )),
                 icondata: Icons.lock,
-                cntrl: pass_cntrl,
+                cntrl: authcontroller.pass_cntrl,
                 hinttext: "Password",
-                obscure: true,
+                obscure: authcontroller.obscure.value,
                 validator: (value) {
                   if (value!.isEmpty || value.length < 6) {
                     return "Password must be longer than 6 characters.";
                   } else {
                     return null;
                   }
-                }),
+                },
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(left: 20, bottom: 20),
               child: Row(
                 children: [
-                  Checkbox(value: false, onChanged: (value) {}),
+                  Obx(
+                    () => Checkbox(
+                        value: authcontroller.checBoxvalue.value,
+                        onChanged: (value) {
+                          authcontroller.checkboxChange();
+                        }),
+                  ),
                   RichText(
                       text: TextSpan(
                           text: "By creating an account you agree to the\n ",
@@ -94,8 +114,9 @@ class BdRegi extends StatelessWidget {
                 bttntxt: "Register",
                 function: () {
                   var valid = formkey.currentState!.validate();
-                  if(valid){
-
+                  if (valid) {
+                    authcontroller.signUp();
+                  
                   }
                 }),
             const SizedBox(

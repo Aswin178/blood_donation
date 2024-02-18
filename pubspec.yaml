@@ -39,6 +39,15 @@ dependencies:
   flutter_svg: ^2.0.9
   font_awesome_flutter: ^10.6.0
   dots_indicator: ^3.0.0
+  #firebase
+  firebase_core: ^2.25.4
+  firebase_auth: ^4.17.4
+  cloud_firestore: ^4.15.4
+  #statemanagement
+  get: ^4.6.6
+  #location
+  geolocator: ^10.1.1
+  geocoding: ^2.1.1
  
 
 dev_dependencies:

@@ -5,7 +5,7 @@ import 'package:blood_donation/widget/categorybutton.dart';
 import 'package:blood_donation/widget/donationtile.dart';
 import 'package:blood_donation/widget/subheading.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class BdHome extends StatelessWidget {
@@ -77,10 +77,8 @@ class BdHome extends StatelessWidget {
                   const Spacer(),
                   CategoryButton(
                     funct: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RqstBldScreen()));
+                      Get.to(() => RqstBldScreen(),transition:Transition.rightToLeftWithFade,duration: Duration(milliseconds: 500) );
+                            
                     },
                     textname: "Request Blood",
                     imagepath: "assets/icons/blood-drop.png",

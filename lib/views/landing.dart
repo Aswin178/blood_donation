@@ -1,7 +1,7 @@
 import 'package:blood_donation/utility/const.dart';
 import 'package:blood_donation/utility/imagepath.dart';
+import 'package:blood_donation/views/bd_regis.dart';
 import 'package:blood_donation/views/bdlogin.dart';
-import 'package:blood_donation/views/bdregis.dart';
 import 'package:blood_donation/widget/button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
